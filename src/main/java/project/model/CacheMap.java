@@ -9,17 +9,37 @@ import java.util.HashMap;
  * Class for keeping track of all received data from the P1 Meter,
  * while also keeping track of the validity of the data.
  */
-public class PowerStatus {
+public class CacheMap {
+
+    /**
+     * Record for storing any data with a {@code Instant} timestamp and a validity,
+     * keeping track when data gets stale.
+     *
+     * @param value The value to store of type {@code T}.
+     * @param timestamp The timestamp on creation.
+     * @param validity The amount of seconds this data is valid after creation.
+     * @param <T> The type for the value stored.
+     */
+    public record CachedData<T>(T value, Instant timestamp, int validity) {
+
+        /**
+         * Checks whether the data is stale by comparing its timestamp
+         * with the one provided.
+         *
+         * @return {@code true}, if the time elapsed is greater than the {@code validity} of the data.
+         */
+        public boolean isOverdue() {
+            return Instant.now().getEpochSecond() - this.timestamp.getEpochSecond() > validity;
+        }
+    }
+
 
     /**
      * {@code HashMap} for keeping track of all useful data of the P1 Meter.
      */
     private final HashMap<String, CachedData<Double>> map = new HashMap<>();
 
-    public PowerStatus() {
-        //TODO: Append all requested fields here...
-        setValue("activePowerW", 0, Instant.MIN);
-    }
+    public CacheMap() {}
 
     /**
      * Sets an accompanied value of a key in the {@code HashMap} to the value provided,

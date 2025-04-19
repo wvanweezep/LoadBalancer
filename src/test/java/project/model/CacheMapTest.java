@@ -9,13 +9,13 @@ import java.time.Instant;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-class PowerStatusTest {
+class CacheMapTest {
 
-    private PowerStatus status;
+    private CacheMap status;
 
     @BeforeEach
     void setUp() {
-        status = new PowerStatus();
+        status = new CacheMap();
         status.setValue("key1", 1, Instant.now());
         status.setValue("key2", 2, Instant.now());
         status.setValue("key3", 3, Instant.now());

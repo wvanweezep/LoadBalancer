@@ -3,7 +3,7 @@ package project;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-import project.model.PowerStatus;
+import project.model.CacheMap;
 
 import java.time.Instant;
 
@@ -16,8 +16,10 @@ public class AppConfig {
     }
 
     @Bean
-    public PowerStatus powerStatus() {
-        return new PowerStatus();
+    public CacheMap powerStatus() {
+        CacheMap cacheMap = new CacheMap();
+        cacheMap.setValue("activePowerW", 0, Instant.MIN);
+        return cacheMap;
     }
 }
 
