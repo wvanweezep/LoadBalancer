@@ -5,11 +5,21 @@ import project.exception.CacheExpiredException;
 import java.time.Instant;
 import java.util.HashMap;
 
+/**
+ * Class for keeping track of all received data from the P1 Meter,
+ * while also keeping track of the validity of the data.
+ */
 public class PowerStatus {
 
+    /**
+     * {@code HashMap} for keeping track of all useful data of the P1 Meter.
+     */
     private final HashMap<String, CachedData<Double>> map = new HashMap<>();
 
-    public PowerStatus() {}
+    public PowerStatus() {
+        //TODO: Append all requested fields here...
+        setValue("activePowerW", 0, Instant.MIN);
+    }
 
     /**
      * Sets an accompanied value of a key in the {@code HashMap} to the value provided,
@@ -52,5 +62,20 @@ public class PowerStatus {
             throw new CacheExpiredException(
                     "Cached data at key '" + key + "' is stale and should not be used.");
         else return data.value();
+    }
+
+    /**
+     * Checks whether a key-value is overdue. Should be used before trying to
+     * retrieve data that might be stale.
+     *
+     * @param key The key of the requested timestamp.
+     * @return true, if the data is stale.
+     */
+    public boolean isValueOverdue(String key) {
+        CachedData<Double> data = map.get(key);
+        if (data == null)
+            throw new IllegalArgumentException(
+                    "No key in HashMap with value: " + key);
+        return data.isOverdue();
     }
 }

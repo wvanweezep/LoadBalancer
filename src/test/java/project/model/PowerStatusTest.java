@@ -8,7 +8,6 @@ import java.time.Instant;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PowerStatusTest {
 
@@ -78,5 +77,23 @@ class PowerStatusTest {
         }).isInstanceOf(CacheExpiredException.class);
 
         assertThat(status.getValue("key5")).isEqualTo(5);
+    }
+
+    @Test
+    void isValueOverdueTest() {
+        assertThat(status.isValueOverdue("key1")).isEqualTo(false);
+        status.setValue("key4", 4, Instant.now().minusSeconds(11));
+        assertThat(status.isValueOverdue("key4")).isEqualTo(true);
+    }
+
+    @Test
+    void isValueOverdueInvalidKey() {
+        assertThatThrownBy(() -> {
+            status.isValueOverdue("key4");
+        }).isInstanceOf(IllegalArgumentException.class);
+
+        assertThatThrownBy(() -> {
+            status.isValueOverdue(null);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }

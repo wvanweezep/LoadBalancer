@@ -1,8 +1,9 @@
 # Compiled class file
 *.class
 
-.idea
-.target
+.idea/
+target/
+/src/main/resources/application.properties
 
 # Log file
 *.log
